@@ -32,7 +32,11 @@ if (typeof (window as any).global === "undefined") {
 import 'leaflet/dist/leaflet.css'
 
 const config = useRuntimeConfig()
-const MAPTILER= config.public.maptiler
+if (process.env.NODE_ENV == "development") {
+  const MAPTILER = config.public.maptiler
+} else {
+  const MAPTILER = process.env.MAPTILER
+}
 
 const mapName = "Satellite"
 const mapSource = "Satellite"
