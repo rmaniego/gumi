@@ -1,0 +1,1 @@
+cls && yarn dev -o

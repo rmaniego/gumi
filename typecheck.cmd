@@ -1,0 +1,1 @@
+yarn nuxi typecheck
