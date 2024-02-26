@@ -33,14 +33,9 @@ import 'leaflet/dist/leaflet.css'
 
 const config = useRuntimeConfig()
 
-const isVercel = process.env.VERCEL_ENV === 'production'
-const MAPTILER = isVercel
+const MAPTILER = process.env.VERCEL_ENV === 'production'
         ? process.env.NUXT_ENV_MAPTILER
         : config.public.maptiler;
-
-console.log(process.env)
-console.log(MAPTILER)
-
 
 const mapName = "Satellite"
 const mapSource = "Satellite"
