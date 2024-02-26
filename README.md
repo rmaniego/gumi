@@ -44,4 +44,5 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
  
 | \#   | Date/Time           | Revision                                     | 
 |------|---------------------|----------------------------------------------| 
+|  02  | 2024-02-27 12:48 AM | Add `leaflet` and `maptiler` support         |
 |  01  | 2024-02-26  2:00 PM | Add GuMi to GitHub                           |

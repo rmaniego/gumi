@@ -10,8 +10,15 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@maptiler/leaflet-maptilersdk": "^2.0.0",
+    "dotenv": "^16.4.5",
+    "leaflet": "^1.9.4",
     "nuxt": "^3.10.3",
     "vue": "^3.4.19",
     "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.8",
+    "nuxt3-leaflet": "^1.0.12"
   }
 }
