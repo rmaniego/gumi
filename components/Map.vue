@@ -32,11 +32,13 @@ if (typeof (window as any).global === "undefined") {
 import 'leaflet/dist/leaflet.css'
 
 const config = useRuntimeConfig()
-if (process.env.NODE_ENV == "development") {
-  const MAPTILER = config.public.maptiler
+if (process.env.NUXT_ENV_VERCEL_ENV !== "undefined") {
+  const MAPTILER = process.env.NUXT_ENV_MAPTILER
 } else {
-  const MAPTILER = process.env.MAPTILER
+  const MAPTILER = config.public.maptiler
 }
+  
+
 
 const mapName = "Satellite"
 const mapSource = "Satellite"
