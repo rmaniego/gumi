@@ -45,12 +45,29 @@ type Coordinates = [number, number];
 type CoordinatesList = [number, number][];
 
 var gmMap: L.Map;
+var thisRegion = 1;
 var customPolygon: CoordinatesList = [];
 var newPolygon: L.Polygon | null = null;
-var thisPoint: Coordinates | null = null;
-
-var thisRegion = 1;
 const customRegions: { [name: string]: CoordinatesList } = {};
+const baseOptions: { [name: string]: any } = {
+  stroke: true,
+  color: "#333",
+  weight: 3,
+  opacity: 1.0,
+  dashArray: null,
+  fill: true,
+  fillColor: "#333",
+  fillOpacity: 0.2
+}
+var customPolyOptions: { [name: string]: any } = { ...baseOptions }
+
+const gmColors: { [color: string]: string } = {
+  "Dark Gray": "#333",
+  "Gray": "#555",
+  "Lightning Yellow": "#f5a623",
+  "Basic Red": "#f00",
+  "Cyan": "#0ff"
+}
 
 const findCoordinateIndex = (target: Coordinates): number => {
   return customPolygon.findIndex(
@@ -78,7 +95,7 @@ onMounted(() => {
       // console.log(coordinates)
       customPolygon.push([coordinates!.lat, coordinates!.lng]);
       if (newPolygon !== null) newPolygon.remove();
-      newPolygon = L.polygon(customPolygon, { color: "black" }).addTo(gmMap);
+      newPolygon = L.polygon(customPolygon, customPolyOptions).addTo(gmMap);
       customRegions[thisRegion.toString()] = customPolygon;
     });
   }, 0.5);
@@ -86,7 +103,7 @@ onMounted(() => {
 
 async function initNewRegion() {
   if (newPolygon !== null) newPolygon.remove();
-  L.polygon(customPolygon, { color: "black" }).addTo(gmMap);
+  L.polygon(customPolygon, customPolyOptions).addTo(gmMap);
   customPolygon = [];
   thisRegion++;
 }

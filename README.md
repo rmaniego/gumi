@@ -4,6 +4,8 @@ Draw shapes, import, and export your map overlays!
 
 GuMi web application allows straightforward Polygon Digitization and Boundary Delineation for free.
 
+View test site at [GuMi Map](https://gumi-map.vercel.app) hosted on vercel.
+
 ## Setup
 
 Make sure to install the dependencies:
