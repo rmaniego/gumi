@@ -1,9 +1,5 @@
 <script lang="ts">
 /* https://docs.aws.amazon.com/prescriptive-guidance/latest/best-practices-cdk-typescript-iac/typescript-best-practices.html */
-import { defineComponent } from "vue";
-
-export default defineComponent({
-});
 </script>
 
 <template>

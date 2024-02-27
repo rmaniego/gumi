@@ -9,7 +9,10 @@ if (typeof (window as any).global === "undefined") {
 <template>
     <client-only>
         <div class="gm-theater">
-          <div id="gmMap" class="gm-map" @click="addMarker"></div>
+          <div id="gmMap" class="gm-map" ></div>
+          <ElIcon color="#409EFC" class="gm-lock" @click="initNewRegion">
+            <Check />
+          </ElIcon>
         </div>
     </client-only>
 </template>
@@ -17,7 +20,10 @@ if (typeof (window as any).global === "undefined") {
 <script lang="ts" setup>
 
 // https://docs.maptiler.com/leaflet/examples/npm-get-started/
+// https://element-plus.org/en-US/component/icon.html#icon-collection
 import L from "leaflet";
+import { ElIcon } from 'element-plus';
+import { Check } from "@element-plus/icons-vue";
 
 // https://nuxt.com/modules/nuxt3-leaflet
 import 'leaflet/dist/leaflet.css'
@@ -31,33 +37,57 @@ const MAPTILER = process.env.VERCEL_ENV === 'production'
 const mapName = "Satellite"
 const mapURL = `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${MAPTILER}`
 const mapAttribution = "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e";
-const mapCenter: L.LatLngExpression = [10.6521, 124.8526]
-var mapZoom = 12
+const mapCenter: L.LatLngExpression = [10.72984023054674, 124.79601323604585]
+var mapZoom = 20
+
+type Coordinates = [number, number]
+type CoordinatesList = [number, number][]
 
 var gmMap: L.Map;
-const customPolygon: [number, number][] = [];
+var customPolygon: CoordinatesList = [];
 var newPolygon: L.Polygon | null  = null;
+var thisPoint: Coordinates | null = null;
+
+var thisRegion = 1;
+const customRegions: { [name: string]: CoordinatesList } = {}
+
+const findCoordinateIndex = (target: Coordinates): number => {
+  return customPolygon.findIndex(coord => coord[0] === target[0] && coord[1] === target[1]);
+}
+
+const deleteCoordinateByIndex = (index: number): void => {
+  if (!(index >= 0 && index < customPolygon.length)) return
+  customPolygon.splice(index, 1);
+};
 
 onMounted(() => {
   setTimeout(() => {
     const map = document.getElementById('gmMap') as HTMLElement;
     gmMap = L.map(map).setView(mapCenter, mapZoom);
 
-      console.log(mapURL)
+    // console.log(mapURL)
     L.tileLayer(mapURL, {
       attribution: mapAttribution,
     }).addTo(gmMap);
 
     gmMap.on('click', function(ev) {
       const coordinates = ev.latlng
-      const newMarker: [number, number] = [coordinates!.lat, coordinates!.lng]
-      customPolygon.push(newMarker)
+      // console.log(coordinates)  
+      customPolygon.push([coordinates!.lat, coordinates!.lng])
       if (newPolygon !== null) newPolygon.remove()
-      newPolygon = L.polygon(customPolygon, {color: 'black'}).addTo(gmMap);
-      // gmMap.fitBounds(newPolygon.getBounds());
+      newPolygon = L.polygon(customPolygon, {color: 'black'}).addTo(gmMap)
+      customRegions[thisRegion.toString()] = customPolygon
+
     });
   }, 0.5)
 })
+
+async function initNewRegion() {
+  if (newPolygon !== null) newPolygon.remove()
+  L.polygon(customPolygon, {color: 'black'}).addTo(gmMap)
+  customPolygon = []
+  thisRegion++
+}
 
 </script>
 
@@ -78,8 +108,31 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+    cursor: move;
 }
 
+.gm-lock {
+  position: fixed;
+  margin: 20px;
+  padding: 10px;
+  right: 20px;
+  bottom: 20px;
+  height: 50px;
+  width: 50px;
+  border-radius: 100%;
+  background-color: #1e90ff;
+  color: #fff;
+  cursor: pointer;
+  -webkit-box-shadow: 0px 0px 20px 3px rgba(0,0,0,0.50);
+  -moz-box-shadow: 0px 0px 20px 3px rgba(0,0,0,0.50);
+  box-shadow: 0px 0px 20px 3px rgba(0,0,0,0.50);
+}
 
+.gm-lock:hover {
+  background-color: #0d80ee;
+  -webkit-box-shadow: 0px 0px 20px 3px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 20px 3px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 20px 3px rgba(0,0,0,0.75);
+}
 
 </style>

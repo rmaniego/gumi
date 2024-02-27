@@ -44,6 +44,7 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
  
 | \#   | Date/Time           | Revision                                     | 
 |------|---------------------|----------------------------------------------| 
+|  05  | 2024-02-27  5:12 PM | Add `save region` option                     |
 |  04  | 2024-02-27  3:40 AM | Use leaflet.js                               |
 |  03  | 2024-02-27 12:57 AM | Fix MAPTILER env variable is undefined       |
 |  02  | 2024-02-27 12:48 AM | Add `leaflet` and `maptiler` support         |
