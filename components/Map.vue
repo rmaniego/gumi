@@ -10,7 +10,7 @@ if (typeof (window as any).global === "undefined") {
   <client-only>
     <div class="gm-theater">
       <div id="gmMap" class="gm-map"></div>
-      <ElIcon color="#409EFC" class="gm-lock" @click="initNewRegion">
+      <ElIcon id="gmLock" class="gm-lock gm-hide" @click="initNewRegion">
         <Check />
       </ElIcon>
     </div>
@@ -97,11 +97,19 @@ onMounted(() => {
       if (newPolygon !== null) newPolygon.remove();
       newPolygon = L.polygon(customPolygon, customPolyOptions).addTo(gmMap);
       customRegions[thisRegion.toString()] = customPolygon;
+
+      const gmLock = document.getElementById('gmLock')
+      if (gmLock == null) return
+      if (customPolygon.length > 2) gmLock.classList.remove('gm-hide')
     });
   }, 0.5);
 });
 
 async function initNewRegion() {
+  const gmLock = document.getElementById('gmLock')
+  if (gmLock == null) return
+
+  gmLock.classList.add('gm-hide')
   if (newPolygon !== null) newPolygon.remove();
   L.polygon(customPolygon, customPolyOptions).addTo(gmMap);
   customPolygon = [];
@@ -151,4 +159,9 @@ body {
   -moz-box-shadow: 0px 0px 20px 3px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 20px 3px rgba(0, 0, 0, 0.75);
 }
+
+.gm-hide {
+  display: none;
+}
+
 </style>
