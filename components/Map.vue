@@ -463,7 +463,8 @@ body {
 	position: fixed;
 	padding: 10px; 
 	width: 100%;
-	color: rgba(0, 0, 0, 0.7);
+	color: rgba(255, 255, 255, 0.7);
+  font-family: Arial, Helvetica, sans-serif;
 	text-align: center;
 	font-size: 0.7em;
 	bottom: 0px;
