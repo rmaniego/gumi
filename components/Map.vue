@@ -345,7 +345,7 @@ body {
   position: fixed;
   top: 0px;
   right: 0px;
-  width: 200px;
+  width: 180px;
   margin: 10px;
   padding: 8px 12px;
   color: #fff;
@@ -387,7 +387,7 @@ body {
   position: fixed;
   top: 0px;
   right: 0px;
-  width: 200px;
+  width: 180px;
   margin: 50px 10px 0 0;
   padding: 8px 8px 5px 8px;
   color: #fff;
@@ -461,13 +461,13 @@ body {
 
 .copyright {
 	position: fixed;
+	bottom: 0;
 	padding: 10px; 
 	width: 100%;
 	color: rgba(255, 255, 255, 0.7);
   font-family: Arial, Helvetica, sans-serif;
 	text-align: center;
 	font-size: 0.7em;
-	bottom: 0px;
 }
 
 .profile {
@@ -496,6 +496,29 @@ body {
 
 .emoji2 {
 	margin-left: -6px;
+}
+
+@media only screen and (max-width: 500px) {
+  .nav-brand {
+    margin: 10px 0 0 60px;
+  }
+  .nav-brand a {
+    font-size: 48px;
+  }
+  .gm-dropdown {
+    margin-top: 15px;
+  }
+  .gm-theme-name {
+    margin-top: 2px;
+  }
+
+  .gm-themes {
+    margin-top: 60px;
+  }
+
+  .copyright {
+    margin-bottom: 25px;
+  }
 }
 
 </style>
