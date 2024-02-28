@@ -50,13 +50,12 @@ if (typeof (window as any).global === "undefined") {
 <script lang="ts" setup>
 // https://docs.maptiler.com/leaflet/examples/npm-get-started/
 // https://element-plus.org/en-US/component/icon.html#icon-collection
-import L from "leaflet";
+import L, { type LatLngExpression } from "leaflet";
 import { ElIcon } from "element-plus";
 import { Check, ArrowDown } from "@element-plus/icons-vue";
 
 // https://nuxt.com/modules/nuxt3-leaflet
 import "leaflet/dist/leaflet.css";
-import "@maptiler/sdk/dist/maptiler-sdk.css";
 
 const runTimeConfig = useRuntimeConfig();
 const MAPTILER =
@@ -73,10 +72,10 @@ var mapZoom = 20;
 
 var gmMap: L.Map;
 var thisRegion = 1;
-type PointArray = [number, number][];
-var customPolygon: PointArray = [];
-var newPolygon: L.Polygon | null = null;
-const customRegions: { [name: string]: PointArray } = {};
+type PointArray = [number, number][]
+var customPolygon: PointArray = []
+var newPolygon: L.Polygon | null = null
+const customRegions: { [name: string]: PointArray } = {}
 const polygonThemes: { [theme: string]: { [key: string]: any }} = {
   "cloudy-gray": {
     stroke: true,
@@ -85,6 +84,7 @@ const polygonThemes: { [theme: string]: { [key: string]: any }} = {
     opacity: 1.0,
     dashArray: null,
     fill: true,
+    fillRule: "nonzero",
     fillColor: '#333',
     fillOpacity: 0.2
   },
@@ -95,6 +95,7 @@ const polygonThemes: { [theme: string]: { [key: string]: any }} = {
     opacity: 1.0,
     dashArray: '5 3',
     fill: true,
+    fillRule: "nonzero",
     fillColor: '#f5a623',
     fillOpacity: 0.1
   },
@@ -105,6 +106,7 @@ const polygonThemes: { [theme: string]: { [key: string]: any }} = {
     opacity: 1.0,
     dashArray: '4',
     fill: true,
+    fillRule: "nonzero",
     fillColor: '#b22222',
     fillOpacity: 0.1
   },
@@ -115,6 +117,7 @@ const polygonThemes: { [theme: string]: { [key: string]: any }} = {
     opacity: 0.8,
     dashArray: '3 5',
     fill: true,
+    fillRule: "nonzero",
     fillColor: '#191970',
     fillOpacity: 0.1
   }
@@ -128,6 +131,15 @@ const polygonThemeNames: { [theme: string]: string } = {
 }
 var thisPolygonTheme: { [name: string]: any } = { ...polygonThemes[selectedPolygonTheme] }
 
+var newMarker: L.Circle | null = null
+const markerTheme: { [name: string]: any } = {
+  radius: 5,
+  color: '#191970',
+  weight: 2,
+  fillOpacity: 0.5
+}
+markerTheme.color = thisPolygonTheme.color
+
 onMounted(() => {
   setTimeout(() => {
     const gmTheme = document.getElementById('gmThemeSelected') as HTMLElement;
@@ -137,9 +149,8 @@ onMounted(() => {
     const map = document.getElementById("gmMap") as HTMLElement;
     if (gmTheme == null || gmThemes == null || gmThemeCode == null || gmThemeName == null || map == null) return
 
+    // load map data
     gmMap = L.map(map).setView(mapCenter, mapZoom);
-
-    // console.log(mapURL)
     L.tileLayer(mapURL, {
       attribution: mapAttribution,
     }).addTo(gmMap);
@@ -150,9 +161,12 @@ onMounted(() => {
         return
       }
 
+      // update region on each new coordinates
       const coordinates = ev.latlng;
-      customPolygon.push([coordinates!.lat, coordinates!.lng]);
+      customPolygon.push([coordinates!.lat, coordinates!.lng])
       if (newPolygon !== null) newPolygon.remove();
+      if (newMarker !== null) newMarker.remove()
+      newMarker = L.circle([coordinates!.lat, coordinates!.lng], markerTheme).addTo(gmMap)
       newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
       customRegions[thisRegion.toString()] = customPolygon;
 
@@ -161,35 +175,39 @@ onMounted(() => {
       if (customPolygon.length > 2) gmLock.classList.remove('gm-hide')
     });
 
-    gmTheme.addEventListener("click", (event) => {
+    gmTheme.addEventListener("click", (_event) => {
       if (gmThemes.classList.contains('gm-hide')) {
         gmThemes.classList.remove('gm-hide')
         return
       }
       gmThemes.classList.add('gm-hide')
-      });
+    })
 
-      const gmThemeOptions = document.querySelectorAll('.gm-theme-option');
-      gmThemeOptions.forEach((option) => {
-        option.addEventListener('click', (event: Event) => {
-          let colorCode = (event.target as HTMLElement)!.getAttribute('data-code')
-          colorCode = colorCode == null ? "" : colorCode
+    // set listener to all theme color options
+    const gmThemeOptions = document.querySelectorAll('.gm-theme-option');
+    gmThemeOptions.forEach((option) => {
+      option.addEventListener('click', (event: Event) => {
+        // get color code
+        let colorCode = (event.target as HTMLElement)!.getAttribute('data-code')
+        colorCode = colorCode == null ? selectedPolygonTheme : colorCode
+        // get color name
+        let colorName = (event.target as HTMLElement)!.textContent
+        colorName = colorName == null ? polygonThemeNames[selectedPolygonTheme] : colorName
 
-          let colorName = (event.target as HTMLElement)!.textContent
-          colorName = colorName == null ? "" : colorName
+        // update theme selector
+        gmThemeName.textContent = colorName.trim()
+        gmThemeCode.classList.remove(`gm-${selectedPolygonTheme}`)
+        selectedPolygonTheme = colorCode
+        // update to new color code
+        gmThemeCode.classList.add(`gm-${colorCode}`)
+        gmThemes.classList.add('gm-hide')
 
-          gmThemeCode.classList.remove(`gm-${selectedPolygonTheme}`)
-          gmThemeCode.classList.add(`gm-${colorCode}`)
-          selectedPolygonTheme = colorCode
-
-          thisPolygonTheme = { ...polygonThemes[selectedPolygonTheme] }
-          if (newPolygon !== null) newPolygon.remove();
-          newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
-
-          gmThemeName.textContent = colorName.trim()
-          gmThemes.classList.add('gm-hide')
-        })
+        // update region color
+        thisPolygonTheme = { ...polygonThemes[selectedPolygonTheme] }
+        if (newPolygon !== null) newPolygon.remove();
+        newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
       })
+    })
   }, 0.5);
 });
 
@@ -248,7 +266,7 @@ body {
   margin: 10px;
   padding: 8px 12px;
   color: #fff;
-  background-color: #333;
+  background-color: #222;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
   cursor: pointer;
@@ -290,7 +308,7 @@ body {
   margin: 50px 10px 0 0;
   padding: 8px 8px 5px 8px;
   color: #fff;
-  background-color: #333;
+  background-color: #222;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
   cursor: pointer;

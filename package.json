@@ -11,8 +11,6 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "@maptiler/leaflet-maptilersdk": "^2.0.0",
-    "@maptiler/sdk": "^1.2.1",
     "dotenv": "^16.4.5",
     "element-plus": "^2.5.6",
     "leaflet": "^1.9.4",
