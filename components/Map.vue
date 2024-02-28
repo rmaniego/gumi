@@ -167,9 +167,11 @@ onMounted(() => {
       customPolygon.push([coordinates!.lat, coordinates!.lng])
       if (newPolygon !== null) newPolygon.remove();
       if (newMarker !== null) newMarker.remove()
-      newMarker = L.circle([coordinates!.lat, coordinates!.lng], markerTheme).addTo(gmMap)
       newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
+      newMarker = L.circle([coordinates!.lat, coordinates!.lng], markerTheme).addTo(gmMap)
       customRegions[thisRegion.toString()] = customPolygon;
+      console.log(thisPolygonTheme)
+      console.log(markerTheme)
 
       // auto hide/show lock region
       const gmLock = document.getElementById('gmLock')
@@ -206,10 +208,12 @@ onMounted(() => {
         gmThemes.classList.add('gm-hide')
 
         // update region color
-        if (customPolygon.length == 0) return 
-        thisPolygonTheme = { ...polygonThemes[selectedPolygonTheme] }
+        thisPolygonTheme = { ...polygonThemes[colorCode] }
         markerTheme.color = thisPolygonTheme.color
         markerTheme.fillColor = thisPolygonTheme.color
+
+        // update elements if present
+        if (customPolygon.length == 0) return 
         if (newPolygon !== null) newPolygon.remove();
         if (newMarker !== null) newMarker.remove()
         newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
