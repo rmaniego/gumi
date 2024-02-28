@@ -43,6 +43,7 @@ if (typeof (window as any).global === "undefined") {
       <ElIcon id="gmLock" class="gm-lock gm-hide" @click="initNewRegion">
         <Check />
       </ElIcon>
+      <div class="copyright">&copy; 2021-present <a href="https://github.com/rmaniego/" class="profile leckerli-one">Rydeon <span class="emoji1">⚡</span><span class="emoji2">✨</span></a></div>
     </div>
   </client-only>
 </template>
@@ -73,7 +74,6 @@ var mapZoom = 5;
 var gmMap: L.Map;
 const mapOptions: { [name: string]: any } = {
   minZoom: 4,
-  maxZoom: 50,
   inertia: true,
   worldCopyJump: true
 }
@@ -457,6 +457,44 @@ body {
 
 .gm-midnight-blue {
   background-color: #191970;
+}
+
+.copyright {
+	position: fixed;
+	padding: 10px; 
+	width: 100%;
+	color: rgba(0, 0, 0, 0.7);
+	text-align: center;
+	font-size: 0.7em;
+	bottom: 0px;
+}
+
+.profile {
+	padding: 3px 5px 3px 8px;
+	color: #fff;
+	background-color: #382f66;
+  font-family: "Leckerli One", cursive;
+  font-weight: 400;
+  font-style: normal;
+	text-decoration: none;
+	border-radius: 8px;
+}
+
+.profile:hover {
+	color: #111 !important;
+	background-color: #e1b403 !important;
+	-webkit-box-shadow: 0px 0px 5px 0px rgba(204,180,0,1);
+	-moz-box-shadow: 0px 0px 5px 0px rgba(204,180,0,1);
+	box-shadow: 0px 0px 5px 0px rgba(204,180,0,1);
+	transition: color 0.5, background-color 0.5s, box-shadow 0.5s;
+}
+
+.emoji1 {
+	margin-left: -3px;
+}
+
+.emoji2 {
+	margin-left: -6px;
 }
 
 </style>
