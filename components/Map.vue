@@ -24,19 +24,19 @@ if (typeof (window as any).global === "undefined") {
         <div id="gmThemeOptions" class="gm-themes gm-hide">
           <div id="gmTheme0" class="gm-theme gm-theme-option" data-code="cloudy-gray">
             <span class="gm-theme-gem gm-cloud-gray"></span>
-            <span class="gm-theme-name">Cloudy Gray</span>
+            <span class="gm-theme-name" data-code="cloudy-gray">Cloudy Gray</span>
           </div>
           <div id="gmTheme1" class="gm-theme gm-theme-option" data-code="lightning-yellow">
             <span class="gm-theme-gem gm-lightning-yellow"></span>
-            <span class="gm-theme-name">Lightning Yellow</span>
+            <span class="gm-theme-name" data-code="lightning-yellow">Lightning Yellow</span>
           </div>
           <div id="gmTheme2" class="gm-theme gm-theme-option" data-code="old-firebrick">
             <span class="gm-theme-gem gm-old-firebrick"></span>
-            <span class="gm-theme-name">Old Firebrick</span>
+            <span class="gm-theme-name" data-code="old-firebrick">Old Firebrick</span>
           </div>
           <div id="gmTheme3" class="gm-theme gm-theme-option" data-code="midnight-blue">
             <span class="gm-theme-gem gm-midnight-blue"></span>
-            <span class="gm-theme-name">Midnight Blue</span>
+            <span class="gm-theme-name" data-code="midnight-blue">Midnight Blue</span>
           </div>
         </div>
       </div>
@@ -170,6 +170,7 @@ onMounted(() => {
       newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
       customRegions[thisRegion.toString()] = customPolygon;
 
+      // auto hide/show lock region
       const gmLock = document.getElementById('gmLock')
       if (gmLock == null) return
       if (customPolygon.length > 2) gmLock.classList.remove('gm-hide')
@@ -198,14 +199,18 @@ onMounted(() => {
         gmThemeName.textContent = colorName.trim()
         gmThemeCode.classList.remove(`gm-${selectedPolygonTheme}`)
         selectedPolygonTheme = colorCode
+        
         // update to new color code
         gmThemeCode.classList.add(`gm-${colorCode}`)
         gmThemes.classList.add('gm-hide')
 
         // update region color
+        if (customPolygon.length == 0) return 
         thisPolygonTheme = { ...polygonThemes[selectedPolygonTheme] }
+        markerTheme.color = thisPolygonTheme.color
         if (newPolygon !== null) newPolygon.remove();
         newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
+        newMarker = L.circle(customPolygon[customPolygon.length-1], markerTheme).addTo(gmMap)
       })
     })
   }, 0.5);
@@ -218,6 +223,7 @@ async function initNewRegion() {
   gmLock.classList.add('gm-hide')
   if (newPolygon !== null) newPolygon.remove();
   L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
+  if (newMarker !== null) newMarker.remove()
   customPolygon = [];
   thisRegion++;
 }
