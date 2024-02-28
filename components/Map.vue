@@ -67,10 +67,17 @@ const mapName = "Satellite";
 const mapURL = `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${MAPTILER}`;
 const mapAttribution =
   '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e';
-const mapCenter: L.LatLngExpression = [10.72984023054674, 124.79601323604585];
-var mapZoom = 20;
+var mapCenter: L.LatLngExpression = [10.72984023054674, 124.79601323604585];
+var mapZoom = 5;
 
 var gmMap: L.Map;
+const mapOptions: { [name: string]: any } = {
+  minZoom: 4,
+  maxZoom: 50,
+  inertia: true,
+  worldCopyJump: true
+}
+
 var thisRegion = 1;
 type PointArray = [number, number][]
 var customPolygon: PointArray = []
@@ -151,7 +158,8 @@ onMounted(() => {
     if (gmTheme == null || gmThemes == null || gmThemeCode == null || gmThemeName == null || map == null) return
 
     // load map data
-    gmMap = L.map(map).setView(mapCenter, mapZoom);
+    gmMap = L.map(map, mapOptions).setView(mapCenter, mapZoom)
+    getBrowserLocation()
     L.tileLayer(mapURL, {
       attribution: mapAttribution,
     }).addTo(gmMap);
@@ -170,8 +178,6 @@ onMounted(() => {
       newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
       newMarker = L.circle([coordinates!.lat, coordinates!.lng], markerTheme).addTo(gmMap)
       customRegions[thisRegion.toString()] = customPolygon;
-      console.log(thisPolygonTheme)
-      console.log(markerTheme)
 
       // auto hide/show lock region
       const gmLock = document.getElementById('gmLock')
@@ -224,8 +230,14 @@ onMounted(() => {
 });
 
 async function initNewRegion() {
+  if (customPolygon.length < 3) return
   const gmLock = document.getElementById('gmLock')
   if (gmLock == null) return
+  
+  // let gmRegionCenter = findCentralCoordinate(customPolygon)
+  // let gmRegionArea: string = calculatePolygonArea(customPolygon).toFixed(1)
+  // var gmArea = L.divIcon({html: `${gmRegionArea} sq. km.`, className: 'gm-region-area'})
+  // L.marker(gmRegionCenter, {icon: gmArea}).addTo(gmMap)
 
   gmLock.classList.add('gm-hide')
   if (newPolygon !== null) newPolygon.remove();
@@ -233,7 +245,65 @@ async function initNewRegion() {
   if (newMarker !== null) newMarker.remove()
   customPolygon = [];
   thisRegion++;
+
 }
+
+
+function getBrowserLocation() {
+  if ("geolocation" in navigator) {
+    // Get the current location
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            mapCenter = [position.coords.latitude, position.coords.longitude]
+            zoomMap(mapZoom)
+        }
+    );
+  }
+
+  function zoomMap(zoom: number) {
+    setTimeout(() => {
+      gmMap.setView(mapCenter, zoom)
+
+      if (zoom>mapZoom+10) return
+      // console.log(zoom)
+      return zoomMap(zoom+1)
+    }, 200)
+  }
+}
+
+function calculatePolygonArea(coords: [number, number][]): number {
+    let area: number = 0;
+    const n: number = coords.length;
+
+    for (let i: number = 0; i < n - 1; i++) {
+        area += coords[i][0] * coords[i + 1][1] - coords[i + 1][0] * coords[i][1];
+    }
+
+    area += coords[n - 1][0] * coords[0][1] - coords[0][0] * coords[n - 1][1];
+
+    area = ((Math.abs(area) / 2.0) * 111320 ) / 1000000;
+    console.log(area)
+
+    return area
+}
+
+function findCentralCoordinate(coordinates: [number, number][]): [number, number] {
+    const numCoordinates: number = coordinates.length;
+
+    let sumLatitude: number = 0;
+    let sumLongitude: number = 0;
+
+    for (const [longitude, latitude] of coordinates) {
+        sumLatitude += latitude;
+        sumLongitude += longitude;
+    }
+
+    const averageLatitude: number = sumLatitude / numCoordinates;
+    const averageLongitude: number = sumLongitude / numCoordinates;
+
+    return [averageLongitude, averageLatitude];
+}
+
 </script>
 
 <style scoped>
@@ -336,6 +406,13 @@ body {
 
 .gm-theme:hover {
   background-color: #444;
+}
+
+.gm-region-area {
+  padding: 2px 3px;
+  width: 50px;
+  background-color: #fff !important;
+  border-radius: 3px;
 }
 
 .gm-lock {

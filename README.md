@@ -15,7 +15,8 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 | \#   | Date/Time           | Revision                                     |
 |------|---------------------|----------------------------------------------|
-|  08  | 2024-02-28 10:59 AM | Fix theme changes not reflected              |
+|  10  | 2024-02-28 11:13 PM | Add auto zoom in to location                 |
+|  09  | 2024-02-28 10:59 AM | Fix theme changes not reflected              |
 |  08  | 2024-02-28  9:56 AM | Add change Polygon theme feature             |
 |  07  | 2024-02-28  9:07 AM | Add theme selector                           |
 |  06  | 2024-02-27  5:44 PM | Add save button hide/show behavior           |
