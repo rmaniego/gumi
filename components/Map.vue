@@ -15,27 +15,27 @@ if (typeof (window as any).global === "undefined") {
       <div id="gmMap" class="gm-map"></div>
       <div id="gmControls" class="gm-controls">
         <div id="gmThemeSelected" class="gm-dropdown">
-          <span class="gm-theme-gem gm-lightning-yellow">&nbsp;</span>
-          <span class="gm-theme-name">{{ polygonThemeNames[selectedPolygonTheme] }}</span>
+          <span id="gmThemeCode" class="gm-theme-gem gm-lightning-yellow">&nbsp;</span>
+          <span id="gmThemeName" class="gm-theme-name">{{ polygonThemeNames[selectedPolygonTheme] }}</span>
           <ElIcon class="gm-dropdown-icon">
             <ArrowDown />
           </ElIcon>
         </div>
-        <div id="gmThemeOptions" class="gm-themes">
-          <div id="gmTheme0" class="gm-theme" data-code="cloudy-gray">
-            <span class="gm-theme-color cloud-gray"></span>
-            <span class="gm-theme0-name">Cloudy Gray</span>
-          </div>
-          <div id="gmTheme1" class="gm-theme" data-code="lightning-yellow">
-            <span class="gm-theme-color lightning-yellow"></span>
+        <div id="gmThemeOptions" class="gm-themes gm-hide">
+          <div id="gmTheme0" class="gm-theme gm-theme-option" data-code="cloudy-gray">
+            <span class="gm-theme-gem gm-cloud-gray"></span>
             <span class="gm-theme-name">Cloudy Gray</span>
           </div>
-          <div id="gmTheme2" class="gm-theme" data-code="old-firebrick">
-            <span class="gm-theme-color old-firebrick"></span>
+          <div id="gmTheme1" class="gm-theme gm-theme-option" data-code="lightning-yellow">
+            <span class="gm-theme-gem gm-lightning-yellow"></span>
+            <span class="gm-theme-name">Lightning Yellow</span>
+          </div>
+          <div id="gmTheme2" class="gm-theme gm-theme-option" data-code="old-firebrick">
+            <span class="gm-theme-gem gm-old-firebrick"></span>
             <span class="gm-theme-name">Old Firebrick</span>
           </div>
-          <div id="gmTheme3" class="gm-theme" data-code="midnight-blue">
-            <span class="gm-theme-color midnight-blue"></span>
+          <div id="gmTheme3" class="gm-theme gm-theme-option" data-code="midnight-blue">
+            <span class="gm-theme-gem gm-midnight-blue"></span>
             <span class="gm-theme-name">Midnight Blue</span>
           </div>
         </div>
@@ -119,7 +119,7 @@ const polygonThemes: { [theme: string]: { [key: string]: any }} = {
     fillOpacity: 0.1
   }
 }
-var selectedPolygonTheme = "lightning-yellow";
+var selectedPolygonTheme = "lightning-yellow"
 const polygonThemeNames: { [theme: string]: string } = {
   "cloudy-gray": "Cloud Gray",
   "lightning-yellow": "Lightning Yellow",
@@ -130,7 +130,13 @@ var thisPolygonTheme: { [name: string]: any } = { ...polygonThemes[selectedPolyg
 
 onMounted(() => {
   setTimeout(() => {
+    const gmTheme = document.getElementById('gmThemeSelected') as HTMLElement;
+    const gmThemes = document.getElementById('gmThemeOptions') as HTMLElement;
+    const gmThemeCode = document.getElementById('gmThemeCode') as HTMLElement;
+    const gmThemeName = document.getElementById('gmThemeName') as HTMLElement;
     const map = document.getElementById("gmMap") as HTMLElement;
+    if (gmTheme == null || gmThemes == null || gmThemeCode == null || gmThemeName == null || map == null) return
+
     gmMap = L.map(map).setView(mapCenter, mapZoom);
 
     // console.log(mapURL)
@@ -139,8 +145,12 @@ onMounted(() => {
     }).addTo(gmMap);
 
     gmMap.on("click", function (ev) {
+      if (!gmThemes.classList.contains('gm-hide')) {
+        gmThemes.classList.add('gm-hide')
+        return
+      }
+
       const coordinates = ev.latlng;
-      // console.log(coordinates)
       customPolygon.push([coordinates!.lat, coordinates!.lng]);
       if (newPolygon !== null) newPolygon.remove();
       newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
@@ -150,6 +160,36 @@ onMounted(() => {
       if (gmLock == null) return
       if (customPolygon.length > 2) gmLock.classList.remove('gm-hide')
     });
+
+    gmTheme.addEventListener("click", (event) => {
+      if (gmThemes.classList.contains('gm-hide')) {
+        gmThemes.classList.remove('gm-hide')
+        return
+      }
+      gmThemes.classList.add('gm-hide')
+      });
+
+      const gmThemeOptions = document.querySelectorAll('.gm-theme-option');
+      gmThemeOptions.forEach((option) => {
+        option.addEventListener('click', (event: Event) => {
+          let colorCode = (event.target as HTMLElement)!.getAttribute('data-code')
+          colorCode = colorCode == null ? "" : colorCode
+
+          let colorName = (event.target as HTMLElement)!.textContent
+          colorName = colorName == null ? "" : colorName
+
+          gmThemeCode.classList.remove(`gm-${selectedPolygonTheme}`)
+          gmThemeCode.classList.add(`gm-${colorCode}`)
+          selectedPolygonTheme = colorCode
+
+          thisPolygonTheme = { ...polygonThemes[selectedPolygonTheme] }
+          if (newPolygon !== null) newPolygon.remove();
+          newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
+
+          gmThemeName.textContent = colorName.trim()
+          gmThemes.classList.add('gm-hide')
+        })
+      })
   }, 0.5);
 });
 
@@ -221,8 +261,9 @@ body {
 .gm-theme-gem {
   position: absolute;
   margin-top: 5px;
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 100%;
 }
 
@@ -239,6 +280,31 @@ body {
   width: 16px;
   height: 16px;
   float: right;
+}
+
+.gm-themes {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  width: 200px;
+  margin: 50px 10px 0 0;
+  padding: 8px 8px 5px 8px;
+  color: #fff;
+  background-color: #333;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.gm-theme {
+  margin-bottom: 5px;
+  padding: 7px 10px;
+  height: 30px;
+  border-radius: 5px;
+}
+
+.gm-theme:hover {
+  background-color: #444;
 }
 
 .gm-lock {
