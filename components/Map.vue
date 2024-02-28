@@ -72,6 +72,7 @@ var mapCenter: L.LatLngExpression = [10.72984023054674, 124.79601323604585];
 var mapZoom = 5;
 
 var gmMap: L.Map;
+var gmMapFx = false
 const mapOptions: { [name: string]: any } = {
   minZoom: 4,
   inertia: true,
@@ -178,6 +179,23 @@ onMounted(() => {
       newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
       newMarker = L.circle([coordinates!.lat, coordinates!.lng], markerTheme).addTo(gmMap)
       customRegions[thisRegion.toString()] = customPolygon;
+
+      if (!gmMapFx) {
+        // insert path drawing-like fx
+        const defsHtml = "<defs><filter id='gm-path-filter'><feTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' result='turbulence'/><feDisplacementMap in2='turbulence' in='SourceGraphic' scale='5'/></filter></defs>"
+        const svgElements = document.querySelectorAll('g')
+        svgElements.forEach(svgElement => {
+          svgElement.innerHTML = defsHtml + svgElement.innerHTML
+          return
+        });
+        gmMapFx = true
+      }
+
+      // path drawing-like filter
+      const pathElements = document.querySelectorAll('path')
+      pathElements.forEach(pathElement => {
+        pathElement.setAttribute("filter", "url(#gm-path-filter)")
+      });
 
       // auto hide/show lock region
       const gmLock = document.getElementById('gmLock')

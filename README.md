@@ -15,6 +15,7 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 | \#   | Date/Time           | Revision                                     |
 |------|---------------------|----------------------------------------------|
+|  11  | 2024-02-29  1:33 AM | Add path filter                              |
 |  10  | 2024-02-28 11:13 PM | Add auto zoom in to location                 |
 |  09  | 2024-02-28 10:59 AM | Fix theme changes not reflected              |
 |  08  | 2024-02-28  9:56 AM | Add change Polygon theme feature             |
