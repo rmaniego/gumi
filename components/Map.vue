@@ -44,7 +44,7 @@ if (typeof (window as any).global === "undefined") {
       <ElIcon id="gmLock" class="gm-lock gm-hide" @click="initNewRegion">
         <Check />
       </ElIcon>
-      <div class="copyright">&copy; 2021-present <a href="https://github.com/rmaniego/" class="profile leckerli-one">Rydeon <span class="emoji1">⚡</span><span class="emoji2">✨</span></a></div>
+      <div class="copyright">&copy; 2024 <a href="https://github.com/rmaniego/" class="profile leckerli-one">Rydeon <span class="emoji1">⚡</span><span class="emoji2">✨</span></a></div>
     </div>
   </client-only>
 </template>
