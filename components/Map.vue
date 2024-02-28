@@ -10,6 +10,7 @@ if (typeof (window as any).global === "undefined") {
   <client-only>
     <div class="gm-theater">
       <div class="nav-brand">
+        <img class="gm-brand-logo" src="/adventurer.png" width="40px" height="40px"/>
         <a href="/">GuMi</a>
       </div>
       <div id="gmMap" class="gm-map"></div>
@@ -338,11 +339,19 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  margin: 10px 0 0 70px;
+  margin: 10px 0 0 60px;
   z-index: 100;
 }
 
+.gm-brand-logo {
+  margin-top: 15px;
+  width: 40px;
+  height: 40px;
+  margin-right: 5px;
+}
+
 .nav-brand a {
+  position: absolute;
   font-family: "Micro 5", sans-serif;
   font-size: 72px;
   font-weight: 400;
@@ -520,18 +529,27 @@ body {
   .nav-brand {
     margin: 10px 0 0 60px;
   }
+
+  .gm-brand-logo {
+    margin-left: -5px;
+    margin-top: 12px;
+  }
   .nav-brand a {
+    margin-top: 10px;
     font-size: 48px;
   }
   .gm-dropdown {
-    margin-top: 15px;
+    margin-top: 26px;
+    width: 160px;
   }
   .gm-theme-name {
-    margin-top: 2px;
+    margin-top: 0px;
+    margin-left: 15px;
   }
 
   .gm-themes {
-    margin-top: 60px;
+    margin-top: 65px;
+    width: 160px;
   }
 
   .copyright {
