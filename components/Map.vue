@@ -139,6 +139,7 @@ const markerTheme: { [name: string]: any } = {
   fillOpacity: 0.5
 }
 markerTheme.color = thisPolygonTheme.color
+markerTheme.fillColor = thisPolygonTheme.color
 
 onMounted(() => {
   setTimeout(() => {
@@ -208,7 +209,9 @@ onMounted(() => {
         if (customPolygon.length == 0) return 
         thisPolygonTheme = { ...polygonThemes[selectedPolygonTheme] }
         markerTheme.color = thisPolygonTheme.color
+        markerTheme.fillColor = thisPolygonTheme.color
         if (newPolygon !== null) newPolygon.remove();
+        if (newMarker !== null) newMarker.remove()
         newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
         newMarker = L.circle(customPolygon[customPolygon.length-1], markerTheme).addTo(gmMap)
       })
