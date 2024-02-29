@@ -476,6 +476,8 @@ body {
   width: 180px;
   margin: 50px 10px 0 0;
   padding: 8px 8px 5px 8px;
+  max-height: 185px;
+  overflow-y: auto;
   color: #fff;
   background-color: #222;
   border: 1px solid rgba(255, 255, 255, 0.25);
