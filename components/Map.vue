@@ -31,13 +31,25 @@ if (typeof (window as any).global === "undefined") {
             <span class="gm-theme-gem gm-lightning-yellow"></span>
             <span class="gm-theme-name" data-code="lightning-yellow">Lightning Yellow</span>
           </div>
-          <div id="gmTheme2" class="gm-theme gm-theme-option" data-code="old-firebrick">
+          <div id="gmTheme2" class="gm-theme gm-theme-option" data-code="electric-yellow">
+            <span class="gm-theme-gem gm-electric-yellow"></span>
+            <span class="gm-theme-name" data-code="electric-yellow">Electric Yellow</span>
+          </div>
+          <div id="gmTheme2" class="gm-theme gm-theme-option" data-code="bright-green">
+            <span class="gm-theme-gem gm-bright-green"></span>
+            <span class="gm-theme-name" data-code="bright-green">Bright Yellow</span>
+          </div>
+          <div id="gmTheme3" class="gm-theme gm-theme-option" data-code="basic-blue">
+            <span class="gm-theme-gem gm-basic-blue"></span>
+            <span class="gm-theme-name" data-code="basic-blue">Basic Blue</span>
+          </div>
+          <div id="gmTheme4" class="gm-theme gm-theme-option" data-code="just-red">
+            <span class="gm-theme-gem gm-just-red"></span>
+            <span class="gm-theme-name" data-code="just-red">Just Red</span>
+          </div>
+          <div id="gmTheme5" class="gm-theme gm-theme-option" data-code="old-firebrick">
             <span class="gm-theme-gem gm-old-firebrick"></span>
             <span class="gm-theme-name" data-code="old-firebrick">Old Firebrick</span>
-          </div>
-          <div id="gmTheme3" class="gm-theme gm-theme-option" data-code="midnight-blue">
-            <span class="gm-theme-gem gm-midnight-blue"></span>
-            <span class="gm-theme-name" data-code="midnight-blue">Midnight Blue</span>
           </div>
         </div>
       </div>
@@ -97,26 +109,48 @@ const polygonThemes: { [theme: string]: { [key: string]: any }} = {
     fillColor: '#333',
     fillOpacity: 0.2
   },
+  "electric-yellow": {
+    stroke: true,
+    color: '#ffff33',
+    weight: 2,
+    opacity: 1.0,
+    dashArray: null,
+    fill: true,
+    fillRule: "nonzero",
+    fillColor: '#ffff33',
+    fillOpacity: 0.1
+  },
   "lightning-yellow": {
     stroke: true,
     color: '#f5a623',
     weight: 2,
     opacity: 1.0,
-    dashArray: '5 3',
+    dashArray: null,
     fill: true,
     fillRule: "nonzero",
     fillColor: '#f5a623',
     fillOpacity: 0.1
   },
-  "old-firebrick": {
+  "bright-green": {
     stroke: true,
-    color: '#b22222',
-    weight: 3,
+    color: '#66ff00',
+    weight: 2,
     opacity: 1.0,
-    dashArray: '4',
+    dashArray: null,
     fill: true,
     fillRule: "nonzero",
-    fillColor: '#b22222',
+    fillColor: '#66ff00',
+    fillOpacity: 0.1
+  },
+  "basic-blue": {
+    stroke: true,
+    color: '#0018f9',
+    weight: 2,
+    opacity: 0.8,
+    dashArray: null,
+    fill: true,
+    fillRule: "nonzero",
+    fillColor: '#0018f9',
     fillOpacity: 0.1
   },
   "midnight-blue": {
@@ -129,14 +163,39 @@ const polygonThemes: { [theme: string]: { [key: string]: any }} = {
     fillRule: "nonzero",
     fillColor: '#191970',
     fillOpacity: 0.1
+  },
+  "old-firebrick": {
+    stroke: true,
+    color: '#b22222',
+    weight: 3,
+    opacity: 1.0,
+    dashArray: null,
+    fill: true,
+    fillRule: "nonzero",
+    fillColor: '#b22222',
+    fillOpacity: 0.1
+  },
+  "just-red": {
+    stroke: true,
+    color: '#ff0000',
+    weight: 3,
+    opacity: 1.0,
+    dashArray: null,
+    fill: true,
+    fillRule: "nonzero",
+    fillColor: '#ff0000',
+    fillOpacity: 0.1
   }
 }
 var selectedPolygonTheme = "lightning-yellow"
 const polygonThemeNames: { [theme: string]: string } = {
   "cloudy-gray": "Cloud Gray",
   "lightning-yellow": "Lightning Yellow",
-  "old-firebrick": "Old Firebrick",
-  "midnight-blue": "Midnight Blue"
+  "electric-yellow": "Electric Yellow",
+  "bright-green": "Bright Green",
+  "midnight-blue": "Midnight Blue",
+  "just-red": "Just Red",
+  "old-firebrick": "Old Firebrick"
 }
 var thisPolygonTheme: { [name: string]: any } = { ...polygonThemes[selectedPolygonTheme] }
 
@@ -184,7 +243,7 @@ onMounted(() => {
       if (!gmMapFx) {
         // insert path drawing-like fx
         const defsHtml = "<defs><filter id='gm-path-filter'><feTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' result='turbulence'/><feDisplacementMap in2='turbulence' in='SourceGraphic' scale='5'/></filter></defs>"
-        const svgElements = document.querySelectorAll('g')
+        const svgElements = document.querySelectorAll('.leaflet-zoom-animated > g')
         svgElements.forEach(svgElement => {
           svgElement.innerHTML = defsHtml + svgElement.innerHTML
           return
@@ -193,7 +252,7 @@ onMounted(() => {
       }
 
       // path drawing-like filter
-      const pathElements = document.querySelectorAll('path')
+      const pathElements = document.querySelectorAll('.leaflet-zoom-animated > g > path')
       pathElements.forEach(pathElement => {
         pathElement.setAttribute("filter", "url(#gm-path-filter)")
       });
@@ -478,12 +537,28 @@ body {
   background-color: #f5a623;
 }
 
-.gm-old-firebrick {
-  background-color: #b22222;
+.gm-electric-yellow {
+  background-color: #ffff33;
+}
+
+.gm-bright-green {
+  background-color: #66ff00;
+}
+
+.gm-basic-blue {
+  background-color: #0018f9;
 }
 
 .gm-midnight-blue {
   background-color: #191970;
+}
+
+.gm-just-red {
+  background-color: #ff0000;
+}
+
+.gm-old-firebrick {
+  background-color: #b22222;
 }
 
 .copyright {
