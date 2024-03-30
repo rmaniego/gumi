@@ -10,53 +10,106 @@ if (typeof (window as any).global === "undefined") {
   <client-only>
     <div class="gm-theater">
       <div class="nav-brand">
-        <img class="gm-brand-logo" src="/adventurer.png" width="40px" height="40px"/>
+        <img
+          class="gm-brand-logo"
+          src="/adventurer.png"
+          width="40px"
+          height="40px"
+        />
         <a href="/">GuMi</a>
       </div>
       <div id="gmMap" class="gm-map"></div>
       <div id="gmControls" class="gm-controls">
         <div id="gmThemeSelected" class="gm-dropdown">
-          <span id="gmThemeCode" class="gm-theme-gem gm-lightning-yellow">&nbsp;</span>
-          <span id="gmThemeName" class="gm-theme-name">{{ polygonThemeNames[selectedPolygonTheme] }}</span>
+          <span id="gmThemeCode" class="gm-theme-gem gm-lightning-yellow"
+            >&nbsp;</span
+          >
+          <span id="gmThemeName" class="gm-theme-name">{{
+            polygonThemeNames[selectedPolygonTheme]
+          }}</span>
           <ElIcon class="gm-dropdown-icon">
             <ArrowDown />
           </ElIcon>
         </div>
         <div id="gmThemeOptions" class="gm-themes gm-hide">
-          <div id="gmTheme0" class="gm-theme gm-theme-option" data-code="cloudy-gray">
+          <div
+            id="gmTheme0"
+            class="gm-theme gm-theme-option"
+            data-code="cloudy-gray"
+          >
             <span class="gm-theme-gem gm-cloud-gray"></span>
-            <span class="gm-theme-name" data-code="cloudy-gray">Cloudy Gray</span>
+            <span class="gm-theme-name" data-code="cloudy-gray"
+              >Cloudy Gray</span
+            >
           </div>
-          <div id="gmTheme1" class="gm-theme gm-theme-option" data-code="lightning-yellow">
+          <div
+            id="gmTheme1"
+            class="gm-theme gm-theme-option"
+            data-code="lightning-yellow"
+          >
             <span class="gm-theme-gem gm-lightning-yellow"></span>
-            <span class="gm-theme-name" data-code="lightning-yellow">Lightning Yellow</span>
+            <span class="gm-theme-name" data-code="lightning-yellow"
+              >Lightning Yellow</span
+            >
           </div>
-          <div id="gmTheme2" class="gm-theme gm-theme-option" data-code="electric-yellow">
+          <div
+            id="gmTheme2"
+            class="gm-theme gm-theme-option"
+            data-code="electric-yellow"
+          >
             <span class="gm-theme-gem gm-electric-yellow"></span>
-            <span class="gm-theme-name" data-code="electric-yellow">Electric Yellow</span>
+            <span class="gm-theme-name" data-code="electric-yellow"
+              >Electric Yellow</span
+            >
           </div>
-          <div id="gmTheme2" class="gm-theme gm-theme-option" data-code="bright-green">
+          <div
+            id="gmTheme2"
+            class="gm-theme gm-theme-option"
+            data-code="bright-green"
+          >
             <span class="gm-theme-gem gm-bright-green"></span>
-            <span class="gm-theme-name" data-code="bright-green">Bright Yellow</span>
+            <span class="gm-theme-name" data-code="bright-green"
+              >Bright Yellow</span
+            >
           </div>
-          <div id="gmTheme3" class="gm-theme gm-theme-option" data-code="basic-blue">
+          <div
+            id="gmTheme3"
+            class="gm-theme gm-theme-option"
+            data-code="basic-blue"
+          >
             <span class="gm-theme-gem gm-basic-blue"></span>
             <span class="gm-theme-name" data-code="basic-blue">Basic Blue</span>
           </div>
-          <div id="gmTheme4" class="gm-theme gm-theme-option" data-code="just-red">
+          <div
+            id="gmTheme4"
+            class="gm-theme gm-theme-option"
+            data-code="just-red"
+          >
             <span class="gm-theme-gem gm-just-red"></span>
             <span class="gm-theme-name" data-code="just-red">Just Red</span>
           </div>
-          <div id="gmTheme5" class="gm-theme gm-theme-option" data-code="old-firebrick">
+          <div
+            id="gmTheme5"
+            class="gm-theme gm-theme-option"
+            data-code="old-firebrick"
+          >
             <span class="gm-theme-gem gm-old-firebrick"></span>
-            <span class="gm-theme-name" data-code="old-firebrick">Old Firebrick</span>
+            <span class="gm-theme-name" data-code="old-firebrick"
+              >Old Firebrick</span
+            >
           </div>
         </div>
       </div>
       <ElIcon id="gmLock" class="gm-lock gm-hide" @click="initNewRegion">
         <Check />
       </ElIcon>
-      <div class="copyright">&copy; 2024 <a href="https://github.com/rmaniego/" class="profile leckerli-one">Rydeon <span class="emoji1">⚡</span><span class="emoji2">✨</span></a></div>
+      <div class="copyright">
+        &copy; 2024
+        <a href="https://github.com/rmaniego/" class="profile leckerli-one"
+          >Rydeon <span class="emoji1">⚡</span
+          ><span class="emoji2">✨</span></a
+        >
+      </div>
     </div>
   </client-only>
 </template>
@@ -64,12 +117,13 @@ if (typeof (window as any).global === "undefined") {
 <script lang="ts" setup>
 // https://docs.maptiler.com/leaflet/examples/npm-get-started/
 // https://element-plus.org/en-US/component/icon.html#icon-collection
-import L, { type LatLngExpression } from "leaflet";
 import { ElIcon } from "element-plus";
+import L, { type LatLngExpression } from "leaflet";
 import { Check, ArrowDown } from "@element-plus/icons-vue";
 
 // https://nuxt.com/modules/nuxt3-leaflet
 import "leaflet/dist/leaflet.css";
+import geojson from '~/assets/gabas.latest.json'
 
 const runTimeConfig = useRuntimeConfig();
 const MAPTILER =
@@ -77,117 +131,117 @@ const MAPTILER =
     ? process.env.NUXT_ENV_MAPTILER
     : runTimeConfig.public.maptiler;
 
-const mapName = "Satellite";
 const mapURL = `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${MAPTILER}`;
 const mapAttribution =
   '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e';
 var mapCenter: L.LatLngExpression = [10.72984023054674, 124.79601323604585];
-var mapZoom = 5;
+var mapZoom = 15;
 
 var gmMap: L.Map;
-var gmMapFx = false
+var gmMapFx = false;
 const mapOptions: { [name: string]: any } = {
   minZoom: 4,
   inertia: true,
-  worldCopyJump: true
-}
+  worldCopyJump: true,
+};
 
 var thisRegion = 1;
-type PointArray = [number, number][]
-var customPolygon: PointArray = []
-var newPolygon: L.Polygon | null = null
-const customRegions: { [name: string]: PointArray } = {}
-const polygonThemes: { [theme: string]: { [key: string]: any }} = {
+type PointArray = [number, number][];
+var customPolygon: PointArray = [];
+var newPolygon: L.Polygon | null = null;
+const customRegions: { [name: string]: PointArray } = {};
+const polygonThemes: { [theme: string]: { [key: string]: any } } = {
   "cloudy-gray": {
     stroke: true,
-    color: '#333',
+    color: "#333",
     weight: 3,
     opacity: 1.0,
     dashArray: null,
     fill: true,
     fillRule: "nonzero",
-    fillColor: '#333',
-    fillOpacity: 0.2
+    fillColor: "#333",
+    fillOpacity: 0.2,
   },
   "electric-yellow": {
     stroke: true,
-    color: '#ffff33',
+    color: "#ffff33",
     weight: 2,
     opacity: 1.0,
     dashArray: null,
     fill: true,
     fillRule: "nonzero",
-    fillColor: '#ffff33',
-    fillOpacity: 0.1
+    fillColor: "#ffff33",
+    fillOpacity: 0.1,
   },
   "lightning-yellow": {
     stroke: true,
-    color: '#f5a623',
+    color: "#f5a623",
     weight: 2,
     opacity: 1.0,
     dashArray: null,
     fill: true,
     fillRule: "nonzero",
-    fillColor: '#f5a623',
-    fillOpacity: 0.1
+    fillColor: "#f5a623",
+    fillOpacity: 0.1,
   },
   "bright-green": {
     stroke: true,
-    color: '#66ff00',
+    color: "#66ff00",
     weight: 2,
     opacity: 1.0,
     dashArray: null,
     fill: true,
     fillRule: "nonzero",
-    fillColor: '#66ff00',
-    fillOpacity: 0.1
+    fillColor: "#66ff00",
+    fillOpacity: 0.1,
   },
   "basic-blue": {
     stroke: true,
-    color: '#0018f9',
+    color: "#0018f9",
     weight: 2,
     opacity: 0.8,
     dashArray: null,
     fill: true,
     fillRule: "nonzero",
-    fillColor: '#0018f9',
-    fillOpacity: 0.1
+    fillColor: "#0018f9",
+    fillOpacity: 0.1,
   },
   "midnight-blue": {
     stroke: true,
-    color: '#191970',
+    color: "#191970",
     weight: 2,
     opacity: 0.8,
-    dashArray: '3 5',
+    dashArray: "3 5",
     fill: true,
     fillRule: "nonzero",
-    fillColor: '#191970',
-    fillOpacity: 0.1
+    fillColor: "#191970",
+    fillOpacity: 0.1,
   },
   "old-firebrick": {
     stroke: true,
-    color: '#b22222',
+    color: "#b22222",
     weight: 3,
     opacity: 1.0,
     dashArray: null,
     fill: true,
     fillRule: "nonzero",
-    fillColor: '#b22222',
-    fillOpacity: 0.1
+    fillColor: "#b22222",
+    fillOpacity: 0.1,
   },
   "just-red": {
     stroke: true,
-    color: '#ff0000',
+    color: "#ff0000",
     weight: 3,
     opacity: 1.0,
     dashArray: null,
     fill: true,
     fillRule: "nonzero",
-    fillColor: '#ff0000',
-    fillOpacity: 0.1
-  }
-}
-var selectedPolygonTheme = "lightning-yellow"
+    fillColor: "#ff0000",
+    fillOpacity: 0.1,
+  },
+};
+
+var selectedPolygonTheme = "lightning-yellow";
 const polygonThemeNames: { [theme: string]: string } = {
   "cloudy-gray": "Cloud Gray",
   "lightning-yellow": "Lightning Yellow",
@@ -195,193 +249,220 @@ const polygonThemeNames: { [theme: string]: string } = {
   "bright-green": "Bright Green",
   "midnight-blue": "Midnight Blue",
   "just-red": "Just Red",
-  "old-firebrick": "Old Firebrick"
-}
-var thisPolygonTheme: { [name: string]: any } = { ...polygonThemes[selectedPolygonTheme] }
+  "old-firebrick": "Old Firebrick",
+};
+var thisPolygonTheme: { [name: string]: any } = {
+  ...polygonThemes[selectedPolygonTheme],
+};
 
-var newMarker: L.Circle | null = null
+var newMarker: L.Circle | null = null;
 const markerTheme: { [name: string]: any } = {
   radius: 5,
-  color: '#191970',
+  color: "#191970",
   weight: 2,
-  fillOpacity: 0.5
-}
-markerTheme.color = thisPolygonTheme.color
-markerTheme.fillColor = thisPolygonTheme.color
+  fillOpacity: 0.5,
+};
+markerTheme.color = thisPolygonTheme.color;
+markerTheme.fillColor = thisPolygonTheme.color;
 
 onMounted(() => {
   setTimeout(() => {
-    const gmTheme = document.getElementById('gmThemeSelected') as HTMLElement;
-    const gmThemes = document.getElementById('gmThemeOptions') as HTMLElement;
-    const gmThemeCode = document.getElementById('gmThemeCode') as HTMLElement;
-    const gmThemeName = document.getElementById('gmThemeName') as HTMLElement;
+    const gmTheme = document.getElementById("gmThemeSelected") as HTMLElement;
+    const gmThemes = document.getElementById("gmThemeOptions") as HTMLElement;
+    const gmThemeCode = document.getElementById("gmThemeCode") as HTMLElement;
+    const gmThemeName = document.getElementById("gmThemeName") as HTMLElement;
     const map = document.getElementById("gmMap") as HTMLElement;
-    if (gmTheme == null || gmThemes == null || gmThemeCode == null || gmThemeName == null || map == null) return
+    if (
+      gmTheme == null ||
+      gmThemes == null ||
+      gmThemeCode == null ||
+      gmThemeName == null ||
+      map == null
+    )
+      return;
 
     // load map data
-    gmMap = L.map(map, mapOptions).setView(mapCenter, mapZoom)
-    getBrowserLocation()
+    gmMap = L.map(map, mapOptions).setView(mapCenter, mapZoom);
+    // getBrowserLocation()
     L.tileLayer(mapURL, {
       attribution: mapAttribution,
     }).addTo(gmMap);
 
+    // ignore squigly
+    // to do layer does not resize well
+    console.log(geojson)
+    L.geoJSON(geojson).addTo(gmMap)
+
     gmMap.on("click", function (ev) {
-      if (!gmThemes.classList.contains('gm-hide')) {
-        gmThemes.classList.add('gm-hide')
-        return
+      if (!gmThemes.classList.contains("gm-hide")) {
+        gmThemes.classList.add("gm-hide");
+        return;
       }
 
       // update region on each new coordinates
       const coordinates = ev.latlng;
-      customPolygon.push([coordinates!.lat, coordinates!.lng])
+      customPolygon.push([coordinates!.lat, coordinates!.lng]);
       if (newPolygon !== null) newPolygon.remove();
-      if (newMarker !== null) newMarker.remove()
+      if (newMarker !== null) newMarker.remove();
       newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
-      newMarker = L.circle([coordinates!.lat, coordinates!.lng], markerTheme).addTo(gmMap)
+      newMarker = L.circle(
+        [coordinates!.lat, coordinates!.lng],
+        markerTheme,
+      ).addTo(gmMap);
       customRegions[thisRegion.toString()] = customPolygon;
 
       if (!gmMapFx) {
         // insert path drawing-like fx
-        const defsHtml = "<defs><filter id='gm-path-filter'><feTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' result='turbulence'/><feDisplacementMap in2='turbulence' in='SourceGraphic' scale='5'/></filter></defs>"
-        const svgElements = document.querySelectorAll('.leaflet-zoom-animated > g')
-        svgElements.forEach(svgElement => {
-          svgElement.innerHTML = defsHtml + svgElement.innerHTML
-          return
+        const defsHtml =
+          "<defs><filter id='gm-path-filter'><feTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' result='turbulence'/><feDisplacementMap in2='turbulence' in='SourceGraphic' scale='5'/></filter></defs>";
+        const svgElements = document.querySelectorAll(
+          ".leaflet-zoom-animated > g",
+        );
+        svgElements.forEach((svgElement) => {
+          svgElement.innerHTML = defsHtml + svgElement.innerHTML;
+          return;
         });
-        gmMapFx = true
+        gmMapFx = true;
       }
 
       // path drawing-like filter
-      const pathElements = document.querySelectorAll('.leaflet-zoom-animated > g > path')
-      pathElements.forEach(pathElement => {
-        pathElement.setAttribute("filter", "url(#gm-path-filter)")
+      const pathElements = document.querySelectorAll(
+        ".leaflet-zoom-animated > g > path",
+      );
+      pathElements.forEach((pathElement) => {
+        pathElement.setAttribute("filter", "url(#gm-path-filter)");
       });
 
       // auto hide/show lock region
-      const gmLock = document.getElementById('gmLock')
-      if (gmLock == null) return
-      if (customPolygon.length > 2) gmLock.classList.remove('gm-hide')
+      const gmLock = document.getElementById("gmLock");
+      if (gmLock == null) return;
+      if (customPolygon.length > 2) gmLock.classList.remove("gm-hide");
     });
 
     gmTheme.addEventListener("click", (_event) => {
-      if (gmThemes.classList.contains('gm-hide')) {
-        gmThemes.classList.remove('gm-hide')
-        return
+      if (gmThemes.classList.contains("gm-hide")) {
+        gmThemes.classList.remove("gm-hide");
+        return;
       }
-      gmThemes.classList.add('gm-hide')
-    })
+      gmThemes.classList.add("gm-hide");
+    });
 
     // set listener to all theme color options
-    const gmThemeOptions = document.querySelectorAll('.gm-theme-option');
+    const gmThemeOptions = document.querySelectorAll(".gm-theme-option");
     gmThemeOptions.forEach((option) => {
-      option.addEventListener('click', (event: Event) => {
+      option.addEventListener("click", (event: Event) => {
         // get color code
-        let colorCode = (event.target as HTMLElement)!.getAttribute('data-code')
-        colorCode = colorCode == null ? selectedPolygonTheme : colorCode
+        let colorCode = (event.target as HTMLElement)!.getAttribute(
+          "data-code",
+        );
+        colorCode = colorCode == null ? selectedPolygonTheme : colorCode;
         // get color name
-        let colorName = (event.target as HTMLElement)!.textContent
-        colorName = colorName == null ? polygonThemeNames[selectedPolygonTheme] : colorName
+        let colorName = (event.target as HTMLElement)!.textContent;
+        colorName =
+          colorName == null
+            ? polygonThemeNames[selectedPolygonTheme]
+            : colorName;
 
         // update theme selector
-        gmThemeName.textContent = colorName.trim()
-        gmThemeCode.classList.remove(`gm-${selectedPolygonTheme}`)
-        selectedPolygonTheme = colorCode
-        
+        gmThemeName.textContent = colorName.trim();
+        gmThemeCode.classList.remove(`gm-${selectedPolygonTheme}`);
+        selectedPolygonTheme = colorCode;
+
         // update to new color code
-        gmThemeCode.classList.add(`gm-${colorCode}`)
-        gmThemes.classList.add('gm-hide')
+        gmThemeCode.classList.add(`gm-${colorCode}`);
+        gmThemes.classList.add("gm-hide");
 
         // update region color
-        thisPolygonTheme = { ...polygonThemes[colorCode] }
-        markerTheme.color = thisPolygonTheme.color
-        markerTheme.fillColor = thisPolygonTheme.color
+        thisPolygonTheme = { ...polygonThemes[colorCode] };
+        markerTheme.color = thisPolygonTheme.color;
+        markerTheme.fillColor = thisPolygonTheme.color;
 
         // update elements if present
-        if (customPolygon.length == 0) return 
+        if (customPolygon.length == 0) return;
         if (newPolygon !== null) newPolygon.remove();
-        if (newMarker !== null) newMarker.remove()
+        if (newMarker !== null) newMarker.remove();
         newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
-        newMarker = L.circle(customPolygon[customPolygon.length-1], markerTheme).addTo(gmMap)
-      })
-    })
+        newMarker = L.circle(
+          customPolygon[customPolygon.length - 1],
+          markerTheme,
+        ).addTo(gmMap);
+      });
+    });
   }, 0.5);
 });
 
 async function initNewRegion() {
-  if (customPolygon.length < 3) return
-  const gmLock = document.getElementById('gmLock')
-  if (gmLock == null) return
-  
+  if (customPolygon.length < 3) return;
+  const gmLock = document.getElementById("gmLock");
+  if (gmLock == null) return;
+
   // let gmRegionCenter = findCentralCoordinate(customPolygon)
   // let gmRegionArea: string = calculatePolygonArea(customPolygon).toFixed(1)
   // var gmArea = L.divIcon({html: `${gmRegionArea} sq. km.`, className: 'gm-region-area'})
   // L.marker(gmRegionCenter, {icon: gmArea}).addTo(gmMap)
 
-  gmLock.classList.add('gm-hide')
+  gmLock.classList.add("gm-hide");
   if (newPolygon !== null) newPolygon.remove();
   L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
-  if (newMarker !== null) newMarker.remove()
+  if (newMarker !== null) newMarker.remove();
   customPolygon = [];
   thisRegion++;
-
 }
-
 
 function getBrowserLocation() {
   if ("geolocation" in navigator) {
     // Get the current location
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            mapCenter = [position.coords.latitude, position.coords.longitude]
-            zoomMap(mapZoom)
-        }
-    );
+    navigator.geolocation.getCurrentPosition((position) => {
+      mapCenter = [position.coords.latitude, position.coords.longitude];
+      zoomMap(mapZoom);
+    });
   }
 
   function zoomMap(zoom: number) {
     setTimeout(() => {
-      gmMap.setView(mapCenter, zoom)
+      gmMap.setView(mapCenter, zoom);
 
-      if (zoom>mapZoom+10) return
+      if (zoom > mapZoom + 10) return;
       // console.log(zoom)
-      return zoomMap(zoom+1)
-    }, 200)
+      return zoomMap(zoom + 1);
+    }, 200);
   }
 }
 
 function calculatePolygonArea(coords: [number, number][]): number {
-    let area: number = 0;
-    const n: number = coords.length;
+  let area: number = 0;
+  const n: number = coords.length;
 
-    for (let i: number = 0; i < n - 1; i++) {
-        area += coords[i][0] * coords[i + 1][1] - coords[i + 1][0] * coords[i][1];
-    }
+  for (let i: number = 0; i < n - 1; i++) {
+    area += coords[i][0] * coords[i + 1][1] - coords[i + 1][0] * coords[i][1];
+  }
 
-    area += coords[n - 1][0] * coords[0][1] - coords[0][0] * coords[n - 1][1];
+  area += coords[n - 1][0] * coords[0][1] - coords[0][0] * coords[n - 1][1];
 
-    area = ((Math.abs(area) / 2.0) * 111320 ) / 1000000;
-    console.log(area)
+  area = ((Math.abs(area) / 2.0) * 111320) / 1000000;
+  console.log(area);
 
-    return area
+  return area;
 }
 
-function findCentralCoordinate(coordinates: [number, number][]): [number, number] {
-    const numCoordinates: number = coordinates.length;
+function findCentralCoordinate(
+  coordinates: [number, number][],
+): [number, number] {
+  const numCoordinates: number = coordinates.length;
 
-    let sumLatitude: number = 0;
-    let sumLongitude: number = 0;
+  let sumLatitude: number = 0;
+  let sumLongitude: number = 0;
 
-    for (const [longitude, latitude] of coordinates) {
-        sumLatitude += latitude;
-        sumLongitude += longitude;
-    }
+  for (const [longitude, latitude] of coordinates) {
+    sumLatitude += latitude;
+    sumLongitude += longitude;
+  }
 
-    const averageLatitude: number = sumLatitude / numCoordinates;
-    const averageLongitude: number = sumLongitude / numCoordinates;
+  const averageLatitude: number = sumLatitude / numCoordinates;
+  const averageLongitude: number = sumLongitude / numCoordinates;
 
-    return [averageLongitude, averageLatitude];
+  return [averageLongitude, averageLatitude];
 }
-
 </script>
 
 <style scoped>
@@ -564,42 +645,45 @@ body {
 }
 
 .copyright {
-	position: fixed;
-	bottom: 0;
-	padding: 10px; 
-	width: 100%;
-	color: rgba(255, 255, 255, 0.7);
+  position: fixed;
+  bottom: 0;
+  padding: 10px;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.7);
   font-family: Arial, Helvetica, sans-serif;
-	text-align: center;
-	font-size: 0.7em;
+  text-align: center;
+  font-size: 0.7em;
 }
 
 .profile {
-	padding: 3px 5px 3px 8px;
-	color: #fff;
-	background-color: #382f66;
+  padding: 3px 5px 3px 8px;
+  color: #fff;
+  background-color: #382f66;
   font-family: "Leckerli One", cursive;
   font-weight: 400;
   font-style: normal;
-	text-decoration: none;
-	border-radius: 8px;
+  text-decoration: none;
+  border-radius: 8px;
 }
 
 .profile:hover {
-	color: #111 !important;
-	background-color: #e1b403 !important;
-	-webkit-box-shadow: 0px 0px 5px 0px rgba(204,180,0,1);
-	-moz-box-shadow: 0px 0px 5px 0px rgba(204,180,0,1);
-	box-shadow: 0px 0px 5px 0px rgba(204,180,0,1);
-	transition: color 0.5, background-color 0.5s, box-shadow 0.5s;
+  color: #111 !important;
+  background-color: #e1b403 !important;
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(204, 180, 0, 1);
+  -moz-box-shadow: 0px 0px 5px 0px rgba(204, 180, 0, 1);
+  box-shadow: 0px 0px 5px 0px rgba(204, 180, 0, 1);
+  transition:
+    color 0.5,
+    background-color 0.5s,
+    box-shadow 0.5s;
 }
 
 .emoji1 {
-	margin-left: -3px;
+  margin-left: -3px;
 }
 
 .emoji2 {
-	margin-left: -6px;
+  margin-left: -6px;
 }
 
 @media only screen and (max-width: 500px) {
@@ -633,5 +717,4 @@ body {
     margin-bottom: 25px;
   }
 }
-
 </style>
