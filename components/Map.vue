@@ -123,7 +123,8 @@ import { Check, ArrowDown } from "@element-plus/icons-vue";
 
 // https://nuxt.com/modules/nuxt3-leaflet
 import "leaflet/dist/leaflet.css";
-import geojson from '~/assets/gabas.latest.json'
+// import geojson from '~/assets/gabas.latest.json'
+import geojson from '~/assets/bgysubmuns-municity-803708000.0.1.json'
 
 const runTimeConfig = useRuntimeConfig();
 const MAPTILER =
