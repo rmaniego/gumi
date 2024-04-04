@@ -21,7 +21,9 @@ if (typeof (window as any).global === "undefined") {
       <div id="gmMap" class="gm-map"></div>
       <div id="gmControls" class="gm-controls">
         <div id="gmThemeSelected" class="gm-dropdown">
-          <span id="gmThemeCode" :class="`gm-theme-gem gm-${selectedPolygonTheme}`"
+          <span
+            id="gmThemeCode"
+            :class="`gm-theme-gem gm-${selectedPolygonTheme}`"
             >&nbsp;</span
           >
           <span id="gmThemeName" class="gm-theme-name">{{
@@ -38,9 +40,7 @@ if (typeof (window as any).global === "undefined") {
             data-code="old-black"
           >
             <span class="gm-theme-gem gm-old-black"></span>
-            <span class="gm-theme-name" data-code="Old Black"
-              >Cloudy Gray</span
-            >
+            <span class="gm-theme-name" data-code="Old Black">Cloudy Gray</span>
           </div>
           <div
             id="gmTheme1"
@@ -128,13 +128,13 @@ if (typeof (window as any).global === "undefined") {
 // https://docs.maptiler.com/leaflet/examples/npm-get-started/
 // https://element-plus.org/en-US/component/icon.html#icon-collection
 import { ElIcon } from "element-plus";
-import L, { type LatLngExpression } from "leaflet";
+import L, { tooltip, type LatLngExpression } from "leaflet";
 import { Check, ArrowDown } from "@element-plus/icons-vue";
 
 // https://nuxt.com/modules/nuxt3-leaflet
 import "leaflet/dist/leaflet.css";
 // import geojson from '~/assets/gabas.latest.json'
-import geojson from '~/assets/gabas.latest.json'
+import geojson from "~/assets/gabas.latest.json";
 
 const runTimeConfig = useRuntimeConfig();
 const MAPTILER =
@@ -146,7 +146,7 @@ const mapURL = `https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=
 const mapAttribution =
   '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e';
 var mapCenter: L.LatLngExpression = [10.72984023054674, 124.79601323604585];
-var mapZoom = 17;
+var mapZoom = 16;
 
 var gmMap: L.Map;
 var gmMapFx = false;
@@ -220,12 +220,12 @@ const polygonThemes: { [theme: string]: { [key: string]: any } } = {
   "basic-blue": {
     stroke: true,
     color: "#0018f9",
-    weight: 2,
+    weight: 3,
     opacity: 0.8,
     dashArray: null,
     fill: true,
     fillRule: "nonzero",
-    fillColor: "#0018f9",
+    fillColor: "#fff",
     fillOpacity: 0.1,
   },
   "midnight-blue": {
@@ -263,13 +263,14 @@ const polygonThemes: { [theme: string]: { [key: string]: any } } = {
   },
 };
 
-var selectedPolygonTheme = "old-black";
+var selectedPolygonTheme = "basic-blue";
 const polygonThemeNames: { [theme: string]: string } = {
   "old-black": "Old Black",
   "cloudy-gray": "Cloudy Gray",
   "lightning-yellow": "Lightning Yellow",
   "electric-yellow": "Electric Yellow",
   "bright-green": "Bright Green",
+  "basic-blue": "Basic Blue",
   "midnight-blue": "Midnight Blue",
   "just-red": "Just Red",
   "old-firebrick": "Old Firebrick",
@@ -314,20 +315,23 @@ onMounted(() => {
     // ignore squigly
     // to do layer does not resize well
     // console.log(geojson)
-    const geoLayers = L.geoJSON(geojson, thisPolygonTheme).addTo(gmMap)
-    
-    geojson.features.forEach(region => {
+    const geoRegions = L.geoJSON(geojson, thisPolygonTheme).addTo(gmMap);
 
-      let gmRegionName = region.properties.adm4_en
-      let gmRegionCenter = findCentralCoordinate(region.geometry.coordinates[0])
+    /*
+    geojson.features.forEach((region) => {
+      let gmRegionName = region.properties.adm4_en;
+      let gmRegionCenter = findCentralCoordinate(
+        region.geometry.coordinates[0],
+      );
 
-      const labelDiv = document.createElement('div');
-      labelDiv.textContent = gmRegionName;
-      labelDiv.className = "gm-label"
+      const gmIcon = new L.DivIcon({
+        html: "", className: "gm-icon"
+      });
 
-      document.body.appendChild(labelDiv);
-
-    });
+      L.marker(gmRegionCenter, { icon: gmIcon })
+        .bindTooltip(gmRegionName.replace(" (", "<br>("), { direction: "left", className: "gm-label", permanent: true})
+        .addTo(gmMap)
+    }); */
 
     gmMap.on("click", function (ev) {
       if (!gmThemes.classList.contains("gm-hide")) {
@@ -336,16 +340,16 @@ onMounted(() => {
       }
 
       // update region on each new coordinates
-      const coordinates = ev.latlng
-      customPolygon.push([coordinates!.lat, coordinates!.lng])
-      if (newPolygon !== null) newPolygon.remove()
-      if (newMarker !== null) newMarker.remove()
-      newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap)
+      const coordinates = ev.latlng;
+      customPolygon.push([coordinates!.lat, coordinates!.lng]);
+      if (newPolygon !== null) newPolygon.remove();
+      if (newMarker !== null) newMarker.remove();
+      newPolygon = L.polygon(customPolygon, thisPolygonTheme).addTo(gmMap);
       newMarker = L.circle(
         [coordinates!.lat, coordinates!.lng],
         markerTheme,
-      ).addTo(gmMap)
-      customRegions[thisRegion.toString()] = customPolygon
+      ).addTo(gmMap);
+      customRegions[thisRegion.toString()] = customPolygon;
 
       /* if (!gmMapFx) {
         // insert path drawing-like fx
@@ -359,7 +363,7 @@ onMounted(() => {
           return;
         });
         gmMapFx = true;
-      } */
+      }
 
       // path drawing-like filter
       const pathElements = document.querySelectorAll(
@@ -367,7 +371,7 @@ onMounted(() => {
       );
       pathElements.forEach((pathElement) => {
         pathElement.setAttribute("filter", "url(#gm-path-filter)");
-      });
+      }); */
 
       // auto hide/show lock region
       const gmLock = document.getElementById("gmLock");
@@ -437,7 +441,7 @@ async function initNewRegion() {
   // var gmArea = L.divIcon({html: `${gmRegionArea} sq. km.`, className: 'gm-region-area'})
   // L.marker(gmRegionCenter, {icon: gmArea}).addTo(gmMap)
 
-  console.log(customPolygon)
+  console.log(customPolygon);
 
   gmLock.classList.add("gm-hide");
   if (newPolygon !== null) newPolygon.remove();
@@ -622,8 +626,8 @@ body {
   border-radius: 3px;
 }
 
-.gm-label {
-  z-index: 1000;
+.leaflet-tooltip-left::before {
+  background-color: rgba(0, 0, 0, 0) !important;
 }
 
 .gm-lock {
